@@ -5,11 +5,12 @@ const mongoURL = process.env.MONGODB_URL
 
 mongoose.connect(mongoURL).then(
     ()=>{
-        console.log("server is connected")
+        console.log("mongodb atlaas is connected")
     }
 ).catch(
-    ()=>{
+    (error)=>{
        console.log("server is not connected")
+       console.log(error)
     }
 )
 
