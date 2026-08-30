@@ -1,23 +1,21 @@
-const mongoose = require("mongoose")
-const dotenv = require("dotenv")
-dotenv.config()
-const mongoURL = process.env.MONGODB_URL
+const mongoose = require("mongoose");
+const dotenv = require("dotenv");
 
-mongoose.connect(mongoURL).then(
-    ()=>{
-        console.log("mongodb atlaas is connected")
+dotenv.config();
+
+const mongoURL = process.env.MONGODB_URL;
+
+const connectDB = async () => {
+    try {
+        await mongoose.connect(mongoURL ,{
+            serverSelectionTimeoutMS: 10000
+        });
+        console.log("MongoDB Atlas is connected");
+    } catch (error) {
+        console.log("MongoDB is not connected");
+        console.log(error.message);
+        process.exit(1);
     }
-).catch(
-    (error)=>{
-       console.log("server is not connected")
-       console.log(error)
-    }
-)
+};
 
-const Databasefile = mongoose.connection;
-
-Databasefile.on("disconnected" , ()=>{
-    console.log('server is disconnected')
-})
-
-module.exports=Databasefile
+module.exports = connectDB;

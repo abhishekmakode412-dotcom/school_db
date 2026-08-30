@@ -53,7 +53,7 @@ router.get("/range/:start/:end" , async (req , res)=>{
       const start = Number(req.params.start)
      const end = Number(req.params.end)
      const student = await Student.find( { rollNumber :{$gte : start , $lte:end} })
-     if(student===0){
+     if(student.length===0){
         res.status(404).json("Students not found")
      }
      res.status(200).json(student)
