@@ -1,5 +1,6 @@
 const express = require('express')
 const connectDB = require("./Databasefile")
+const passport = require("./Authentication")
 
 const Studentroutes = require("./Studentsroutes")
 const Teacherroutes = require("./Teacherroutes")
@@ -22,7 +23,10 @@ app.get("/" , (req ,res)=>{
    
       res.send("hello abhishek ")
 })
-app.use("/student",logrequest , Studentroutes)
+app.use(logrequest)
+app.use(passport.initialize())
+const localmiddlewear = passport.authenticate('local', {session : false})
+app.use("/student",localmiddlewear, Studentroutes)
 app.use("/teacher" , Teacherroutes)
  
 const startServer = async () => {
