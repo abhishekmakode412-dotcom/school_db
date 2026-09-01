@@ -1,9 +1,9 @@
 const express = require("express")
 const router = express.Router()
-
+const  {jwtauthmiddlewear , generatetoken}= require("./jwt")
 const Student = require("./Modules/Studentfile")
 const passport = require('./Authentication')
-router.post("/", async (req, res) => {
+router.post("/signup", async (req, res) => {
       console.log("POST ROUTE HIT ");
     try {
 
@@ -12,8 +12,9 @@ router.post("/", async (req, res) => {
         const savestudent = await newstudent.save()
 
         console.log("Student saved")
+        const token = generatetoken({username:savestudent.username , _id:savestudent._id})
 
-        res.status(201).json(savestudent)
+        res.status(201).json({savestudent:savestudent , token:token})
 
     } catch (error) {
         console.log("Student not saved:", error)
