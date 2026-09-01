@@ -1,7 +1,10 @@
 const express = require("express")
 const router = express.Router()
+
 const Student = require("./Modules/Studentfile")
+const passport = require('./Authentication')
 router.post("/", async (req, res) => {
+      console.log("POST ROUTE HIT ");
     try {
 
         const newstudent = new Student(req.body)
@@ -19,6 +22,13 @@ router.post("/", async (req, res) => {
             message: "Student not saved",
             error: error.message
         })
+    }
+})
+router.post('/login' , passport.authenticate('local' , {session : false}),(req , res)=>{
+    try{
+        res.status(201).json({message:"login successfull", student:req.user})
+    }catch(error){
+        res.status(404).json({message:"notfound" , error : error.message})
     }
 })
 

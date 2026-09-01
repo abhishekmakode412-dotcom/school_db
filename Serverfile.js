@@ -25,8 +25,8 @@ app.get("/" , (req ,res)=>{
 })
 app.use(logrequest)
 app.use(passport.initialize())
-const localmiddlewear = passport.authenticate('local', {session : false})
-app.use("/student",localmiddlewear, Studentroutes)
+//const localmiddlewear = passport.authenticate('local', {session : false})
+app.use("/student", Studentroutes)
 app.use("/teacher" , Teacherroutes)
  
 const startServer = async () => {

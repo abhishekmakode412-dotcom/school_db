@@ -1,6 +1,7 @@
- const mongoose = require("mongoose")
- const bcrypt = require("bcrypt")
- const studentSchema = new mongoose.Schema({
+const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
+console.log("student file loaded")
+const studentSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
@@ -44,38 +45,57 @@
         type: Number,
         required: true
     },
-    username:{
-        required : true,
-        type : String
+
+    username: {
+        type: String,
+        required: true
     },
-    password:{
-      required : true,
-      type : String
+
+    password: {
+        type: String,
+        required: true
     }
- });
+});
 
- studentSchema.pre('save' , async(next)=>{
-    const student = this;
-    if(!student.isModified('password'))
-        return next()
-    try{
-        const salt = await bcrypt.genSalt(10)
-        const hashpassword =await bcrypt.hash(student.password , salt)
-        student.password = hashpassword
-        next();
-    }catch(error){
-      return next(error)
+ //Password hashing 
+ studentSchema.pre("save", async function() {
+
+    console.log("PRE SAVE PASSWORD:", this.password);
+
+    if (!this.isModified("password")) {
+        return;
     }
- })
 
- studentSchema.method.comparePassword =async(candidatepassword)=>{
-     try{
-       const isMatch = await bcrypt.compare(candidatepassword , this.password )
-       return isMatch
-     }catch(error){
-         throw error
-     }
- }
+    const salt = await bcrypt.genSalt(10);
 
- const Student = mongoose.model('Student' , studentSchema)
- module.exports = Student;
+    const hashpassword = await bcrypt.hash( this.password, salt );
+
+    console.log("HASHED PASSWORD:", hashpassword);
+
+    this.password = hashpassword;
+});
+
+
+// Password comparison
+studentSchema.methods.comparePassword = async function(candidatepassword) {
+
+    try {
+
+        const isMatch = await bcrypt.compare(
+            candidatepassword,
+            this.password
+        );
+
+        return isMatch;
+
+    } catch (error) {
+
+        throw error;
+
+    }
+};
+
+
+const Student = mongoose.model("Student", studentSchema);
+
+module.exports = Student;

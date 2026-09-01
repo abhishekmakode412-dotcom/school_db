@@ -9,7 +9,7 @@ passport.use(new localstrategy( async (username , password , done)=>{
       if(!user){
         return done(null, false, {message:"not found"})
       }
-      const ispasswordmatch = user.comparePassword(password)
+      const ispasswordmatch = await user.comparePassword(password)
       if(ispasswordmatch){
         return done(null , user)
       }
